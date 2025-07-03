@@ -19,14 +19,18 @@ import java.util.Optional;
 @Transactional
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final ActivityLogService activityLogService;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private ActivityLogService activityLogService;
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, ActivityLogService activityLogService){
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.activityLogService = activityLogService;
+    }
 
     public Page<UserDTO> getAllUsers(Pageable pageable) {
         return userRepository.findAll(pageable).map(this::convertToDTO);
